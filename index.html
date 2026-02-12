@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Osh Posh - Eng Mazali O'zbek Taomlari</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <style>
+    .hero-bg { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://picsum.photos/id/1015/2000/1200'); background-size: cover; background-position: center; }
+    .card-hover { transition: all 0.3s; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #f59e0b; transition: width 0.3s; }
+    .nav-link:hover::after { width: 100%; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-utensils text-3xl text-orange-600"></i>
+        <h1 class="text-3xl font-bold text-gray-800">Osh Posh</h1>
+      </div>
+      <div class="flex items-center gap-8 text-lg">
+        <a href="#" onclick="showSection('home')" class="nav-link text-gray-700 hover:text-orange-600">Bosh sahifa</a>
+        <a href="#" onclick="showSection('menu')" class="nav-link text-gray-700 hover:text-orange-600">Menu</a>
+        <a href="#" onclick="showSection('about')" class="nav-link text-gray-700 hover:text-orange-600">Biz haqimizda</a>
+        <a href="#" onclick="showSection('contact')" class="nav-link text-gray-700 hover:text-orange-600">Kontakt</a>
+        <button onclick="toggleCart()" class="relative flex items-center gap-2 text-gray-700 hover:text-orange-600">
+          <i class="fa-solid fa-shopping-cart text-2xl"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
+        <button onclick="showAdminLogin()" class="bg-orange-600 text-white px-6 py-2 rounded-full hover:bg-orange-700 transition">Admin</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HOME SECTION -->
+  <section id="home-section" class="hero-bg h-screen flex items-center text-white">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h2 class="text-6xl font-bold mb-4">Osh Posh</h2>
+      <p class="text-3xl mb-8">Eng mazali o‘zbek taomlari — oilangiz va do‘stlaringiz uchun</p>
+      <button onclick="showSection('menu')" class="bg-orange-600 hover:bg-orange-700 text-white text-xl px-12 py-4 rounded-full transition">Menuga o‘tish</button>
+    </div>
+  </section>
+
+  <!-- MENU SECTION -->
+  <section id="menu-section" class="py-16 max-w-7xl mx-auto px-6 hidden">
+    <div class="flex justify-between items-center mb-10">
+      <h2 class="text-4xl font-bold">Menimiz</h2>
+      <input id="search-input" type="text" placeholder="Taom qidirish..." 
+             class="border border-gray-300 rounded-full px-6 py-3 w-96 focus:outline-none focus:border-orange-500"
+             onkeyup="filterMenu()"/>
+    </div>
+
+    <!-- Kategoriyalar -->
+    <div class="flex gap-3 mb-10 overflow-x-auto pb-4" id="categories">
+      <!-- JS orqali to‘ldiriladi -->
+    </div>
+
+    <!-- Taomlar -->
+    <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <!-- JS orqali to‘ldiriladi -->
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about-section" class="py-20 bg-white hidden">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold mb-8">Biz haqimizda</h2>
+      <p class="text-xl leading-relaxed text-gray-600">
+        "Osh Posh" — bu faqat restoran emas, bu o‘zbek milliy taomlari va mehmondo‘stlikning ramzi. 
+        Har bir taomimizda oilaviy an’analar va eng sifatli mahsulotlar birlashgan.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact-section" class="py-20 bg-gray-100 hidden">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Biz bilan bog‘laning</h2>
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <p class="text-2xl font-semibold mb-4">Manzil</p>
+          <p class="text-gray-600">Toshkent, Chilonzor tumani, Bunyodkor ko‘chasi 45</p>
+          <p class="text-gray-600 mt-6">Telefon: +998 99 123 45 67</p>
+          <p class="text-gray-600">Email: info@oshposh.uz</p>
+        </div>
+        <div>
+          <p class="text-2xl font-semibold mb-4">Ish vaqti</p>
+          <p class="text-gray-600">Har kuni: 10:00 — 23:00</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CART MODAL -->
+  <div id="cart-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+    <div class="bg-white w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden">
+      <div class="p-8 border-b flex justify-between items-center">
+        <h3 class="text-3xl font-bold">Savat</h3>
+        <button onclick="toggleCart()" class="text-4xl leading-none text-gray-400 hover:text-gray-600">&times;</button>
+      </div>
+      <div id="cart-items" class="p-8 max-h-[60vh] overflow-auto"></div>
+      <div class="p-8 border-t">
+        <div class="flex justify-between text-2xl font-bold mb-6">
+          <span>Jami:</span>
+          <span id="cart-total">0 so‘m</span>
+        </div>
+        <button onclick="placeOrder()" 
+                class="w-full bg-orange-600 hover:bg-orange-700 text-white py-5 rounded-2xl text-xl font-semibold transition">
+          Buyurtma berish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md">
+      <h3 class="text-3xl font-bold text-center mb-8">Admin Panel</h3>
+      <input id="admin-username" type="text" placeholder="Login" value="admin" class="w-full border p-4 rounded-2xl mb-4"/>
+      <input id="admin-password" type="password" placeholder="Parol" value="123" class="w-full border p-4 rounded-2xl mb-8"/>
+      <button onclick="adminLogin()" class="w-full bg-orange-600 text-white py-4 rounded-2xl text-xl font-semibold">Kirish</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <section id="admin-section" class="py-16 max-w-7xl mx-auto px-6 hidden">
+    <div class="flex justify-between items-center mb-10">
+      <h2 class="text-4xl font-bold">Admin Panel</h2>
+      <button onclick="logoutAdmin()" class="text-red-600 font-semibold">Chiqish</button>
+    </div>
+
+    <!-- Yangi taom qo'shish -->
+    <div class="bg-white p-8 rounded-3xl shadow mb-12">
+      <h3 class="text-2xl font-bold mb-6">Yangi taom qo'shish</h3>
+      <div class="grid md:grid-cols-2 gap-6">
+        <input id="new-name" placeholder="Taom nomi" class="border p-4 rounded-2xl"/>
+        <input id="new-category" placeholder="Kategoriya (masalan: Oshlar)" class="border p-4 rounded-2xl"/>
+        <input id="new-price" type="number" placeholder="Narx (so'm)" class="border p-4 rounded-2xl"/>
+        <input id="new-desc" placeholder="Qisqa tavsif" class="border p-4 rounded-2xl"/>
+        <input id="new-img" placeholder="Rasm URL" class="border p-4 rounded-2xl md:col-span-2"/>
+      </div>
+      <button onclick="addNewItem()" class="mt-6 bg-green-600 text-white px-10 py-4 rounded-2xl hover:bg-green-700">Qo'shish</button>
+    </div>
+
+    <!-- Mavjud taomlar -->
+    <h3 class="text-2xl font-bold mb-6">Mavjud taomlar</h3>
+    <div id="admin-menu-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+    <!-- Buyurtmalar -->
+    <h3 class="text-2xl font-bold mt-16 mb-6">Yangi buyurtmalar</h3>
+    <div id="admin-orders" class="space-y-4"></div>
+  </section>
+
+  <script>
+    // Tailwind script
+    tailwind.config = { content: [], theme: { extend: {} } };
+
+    let menuItems = [
+      {id:1, name:"Palov (Osh)", category:"Oshlar", price:65000, desc:"Qo‘y go‘shti, sabzi va ziravorlar bilan", img:"https://picsum.photos/id/1015/400/300"},
+      {id:2, name:"Mol go‘shti shashlik", category:"Kaboblar", price:45000, desc:"Marinadlangan mol go‘shti", img:"https://picsum.photos/id/201/400/300"},
+      {id:3, name:"Lag'mon", category:"Sho'rvalar", price:38000, desc:"Qo‘l tortilgan lag'mon", img:"https://picsum.photos/id/301/400/300"},
+      {id:4, name:"Manti", category:"Nonushta", price:32000, desc:"Bug'da pishirilgan manti", img:"https://picsum.photos/id/401/400/300"},
+      {id:5, name:"Somsa", category:"Nonushta", price:18000, desc:"Go‘shtli somsa", img:"https://picsum.photos/id/501/400/300"},
+      {id:6, name:"Sho'rva", category:"Sho'rvalar", price:28000, desc:"Qo‘y go‘shti sho'rva", img:"https://picsum.photos/id/601/400/300"},
+    ];
+
+    let cart = [];
+    let orders = [];
+    let isAdmin = false;
+
+    // LocalStorage dan yuklash
+    function loadData() {
+      const savedMenu = localStorage.getItem('oshposh_menu');
+      if (savedMenu) menuItems = JSON.parse(savedMenu);
+      const savedOrders = localStorage.getItem('oshposh_orders');
+      if (savedOrders) orders = JSON.parse(savedOrders);
+    }
+
+    function saveData() {
+      localStorage.setItem('oshposh_menu', JSON.stringify(menuItems));
+      localStorage.setItem('oshposh_orders', JSON.stringify(orders));
+    }
+
+    function renderMenu(filteredItems = menuItems) {
+      const grid = document.getElementById('menu-grid');
+      grid.innerHTML = '';
+      filteredItems.forEach(item => {
+        grid.innerHTML += `
+          <div class="bg-white rounded-3xl overflow-hidden shadow card-hover">
+            <img src="${item.img}" class="w-full h-56 object-cover"/>
+            <div class="p-6">
+              <h4 class="font-bold text-xl">${item.name}</h4>
+              <p class="text-gray-600 text-sm mt-2">${item.desc}</p>
+              <div class="flex justify-between items-center mt-6">
+                <span class="text-2xl font-bold text-orange-600">${item.price.toLocaleString()} so‘m</span>
+                <button onclick="addToCart(${item.id})" 
+                        class="bg-orange-600 text-white px-8 py-3 rounded-2xl hover:bg-orange-700 transition">
+                  Savatga
+                </button>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function renderCategories() {
+      const cats = [...new Set(menuItems.map(i => i.category))];
+      let html = `<button onclick="filterByCategory('all')" class="category-btn active px-6 py-3 bg-orange-600 text-white rounded-full">Barchasi</button>`;
+      cats.forEach(cat => {
+        html += `<button onclick="filterByCategory('\( {cat}')" class="category-btn px-6 py-3 bg-white border hover:bg-gray-100 rounded-full"> \){cat}</button>`;
+      });
+      document.getElementById('categories').innerHTML = html;
+    }
+
+    function filterByCategory(cat) {
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active', 'bg-orange-600', 'text-white'));
+      if (cat === 'all') {
+        renderMenu();
+      } else {
+        const filtered = menuItems.filter(i => i.category === cat);
+        renderMenu(filtered);
+      }
+    }
+
+    function filterMenu() {
+      const term = document.getElementById('search-input').value.toLowerCase();
+      const filtered = menuItems.filter(item => 
+        item.name.toLowerCase().includes(term) || 
+        item.desc.toLowerCase().includes(term)
+      );
+      renderMenu(filtered);
+    }
+
+    function addToCart(id) {
+      const item = menuItems.find(i => i.id === id);
+      const existing = cart.find(i => i.id === id);
+      if (existing) existing.qty = (existing.qty || 1) + 1;
+      else cart.push({...item, qty: 1});
+      updateCartCount();
+      alert(`${item.name} savatga qo'shildi!`);
+    }
+
+    function updateCartCount() {
+      const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+      document.getElementById('cart-count').textContent = count;
+    }
+
+    function toggleCart() {
+      const modal = document.getElementById('cart-modal');
+      const itemsDiv = document.getElementById('cart-items');
+      let total = 0;
+      let html = '';
+
+      if (cart.length === 0) {
+        html = `<p class="text-center text-gray-500 py-12">Savat bo'sh</p>`;
+      } else {
+        cart.forEach((item, index) => {
+          const qty = item.qty || 1;
+          const price = item.price * qty;
+          total += price;
+          html += `
+            <div class="flex gap-4 mb-8">
+              <img src="${item.img}" class="w-24 h-24 object-cover rounded-2xl"/>
+              <div class="flex-1">
+                <h4 class="font-semibold">${item.name}</h4>
+                <p class="text-sm text-gray-500">${item.desc}</p>
+                <div class="flex justify-between mt-4">
+                  <div class="flex items-center gap-3">
+                    <button onclick="changeQty(${index}, -1)" class="w-8 h-8 border rounded-lg">-</button>
+                    <span class="font-bold w-8 text-center">${qty}</span>
+                    <button onclick="changeQty(${index}, 1)" class="w-8 h-8 border rounded-lg">+</button>
+                  </div>
+                  <div>
+                    <span class="font-bold">${price.toLocaleString()} so‘m</span>
+                    <button onclick="removeFromCart(${index})" class="ml-4 text-red-500 text-sm">O‘chirish</button>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        });
+      }
+
+      itemsDiv.innerHTML = html;
+      document.getElementById('cart-total').textContent = total.toLocaleString() + ' so‘m';
+      modal.classList.toggle('hidden');
+    }
+
+    function changeQty(index, change) {
+      cart[index].qty = (cart[index].qty || 1) + change;
+      if (cart[index].qty < 1) cart.splice(index, 1);
+      toggleCart(); // refresh
+      updateCartCount();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      toggleCart();
+      updateCartCount();
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) return alert("Savat bo'sh!");
+      
+      const order = {
+        id: Date.now(),
+        date: new Date().toLocaleString('uz-UZ'),
+        items: [...cart],
+        total: cart.reduce((sum, i) => sum + i.price * (i.qty || 1), 0),
+        status: "Yangi"
+      };
+      
+      orders.unshift(order);
+      saveData();
+      
+      alert("✅ Buyurtma qabul qilindi! Admin panelda ko‘rinadi.");
+      cart = [];
+      updateCartCount();
+      toggleCart();
+      
+      // Admin ochiq bo'lsa yangilash
+      if (!document.getElementById('admin-section').classList.contains('hidden')) {
+        renderAdminOrders();
+      }
+    }
+
+    // Admin funksiyalari
+    function showAdminLogin() {
+      document.getElementById('admin-login-modal').classList.remove('hidden');
+    }
+
+    function adminLogin() {
+      const user = document.getElementById('admin-username').value;
+      const pass = document.getElementById('admin-password').value;
+      if (user === "admin" && pass === "123") {
+        isAdmin = true;
+        document.getElementById('admin-login-modal').classList.add('hidden');
+        showSection('admin');
+        renderAdminMenu();
+        renderAdminOrders();
+      } else {
+        alert("Login yoki parol noto‘g‘ri!");
+      }
+    }
+
+    function logoutAdmin() {
+      isAdmin = false;
+      showSection('home');
+    }
+
+    function renderAdminMenu() {
+      const container = document.getElementById('admin-menu-list');
+      container.innerHTML = '';
+      menuItems.forEach((item, index) => {
+        container.innerHTML += `
+          <div class="bg-white p-6 rounded-3xl shadow flex gap-6">
+            <img src="${item.img}" class="w-32 h-32 object-cover rounded-2xl"/>
+            <div class="flex-1">
+              <h4 class="font-bold">${item.name}</h4>
+              <p class="text-sm text-gray-500">${item.category} • ${item.price.toLocaleString()} so‘m</p>
+              <p class="text-sm mt-2">${item.desc}</p>
+              <div class="mt-6">
+                <button onclick="deleteItem(${index})" class="text-red-600 hover:underline">O‘chirish</button>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function addNewItem() {
+      const name = document.getElementById('new-name').value;
+      const category = document.getElementById('new-category').value;
+      const price = parseInt(document.getElementById('new-price').value);
+      const desc = document.getElementById('new-desc').value;
+      const img = document.getElementById('new-img').value || "https://picsum.photos/id/237/400/300";
+
+      if (!name || !category || !price) return alert("Barcha maydonlarni to‘ldiring!");
+
+      menuItems.push({
+        id: Date.now(),
+        name, category, price, desc, img
+      });
+
+      saveData();
+      renderAdminMenu();
+      renderMenu();
+      renderCategories();
+      alert("Yangi taom qo‘shildi!");
+    }
+
+    function deleteItem(index) {
+      if (confirm("Rostdan ham o‘chirmoqchimisiz?")) {
+        menuItems.splice(index, 1);
+        saveData();
+        renderAdminMenu();
+        renderMenu();
+        renderCategories();
+      }
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById('admin-orders');
+      container.innerHTML = '';
+      if (orders.length === 0) {
+        container.innerHTML = `<p class="text-gray-500">Hozircha buyurtma yo‘q</p>`;
+        return;
+      }
+      orders.forEach(order => {
+        let itemsList = order.items.map(i => `\( {i.name} ( \){i.qty || 1} dona)`).join(', ');
+        container.innerHTML += `
+          <div class="bg-white p-6 rounded-3xl shadow">
+            <div class="flex justify-between">
+              <div>
+                <p class="font-bold">Buyurtma #${order.id}</p>
+                <p class="text-sm text-gray-500">${order.date}</p>
+              </div>
+              <div class="text-right">
+                <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm">${order.status}</span>
+                <p class="font-bold mt-2">${order.total.toLocaleString()} so‘m</p>
+              </div>
+            </div>
+            <p class="mt-4 text-sm">${itemsList}</p>
+          </div>`;
+      });
+    }
+
+    function showSection(section) {
+      document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+      if (section === 'home') document.getElementById('home-section').classList.remove('hidden');
+      else if (section === 'menu') document.getElementById('menu-section').classList.remove('hidden');
+      else if (section === 'about') document.getElementById('about-section').classList.remove('hidden');
+      else if (section === 'contact') document.getElementById('contact-section').classList.remove('hidden');
+      else if (section === 'admin') document.getElementById('admin-section').classList.remove('hidden');
+    }
+
+    // Init
+    window.onload = () => {
+      loadData();
+      renderMenu();
+      renderCategories();
+      showSection('home');
+      updateCartCount();
+    };
+  </script>
+</body>
+</html>
